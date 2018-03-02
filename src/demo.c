@@ -64,8 +64,14 @@ void *detect_in_thread(void *ptr)
     printf("\nFPS:%.1f\n",fps);
     printf("Objects:\n\n");
     image display = buff[(buff_index+2) % 3];
+    /*
+    commenting out draw for now, hoping to improve performance on detection along
     draw_detections(display, demo_detections, demo_thresh, boxes, probs, 0, demo_names, demo_alphabet, demo_classes);
+    */
 
+    /* Swaping draw for straight post  */
+    post_detections(demo_detections, demo_thresh, probs, demo_names, demo_classes);
+   
     demo_index = (demo_index + 1)%demo_frame;
     running = 0;
     return 0;
@@ -81,7 +87,8 @@ void *fetch_in_thread(void *ptr)
 
 void *display_in_thread(void *ptr)
 {
-    show_image_cv(buff[(buff_index + 1)%3], "Demo", ipl);
+    //uncomment the next line to re-enable video making
+    //show_image_cv(buff[(buff_index + 1)%3], "Demo", ipl);
     // int c = cvWaitKey(1);
     // if (c != -1) c = c%256;
     // if (c == 27) {

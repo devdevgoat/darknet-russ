@@ -238,7 +238,7 @@ image **load_alphabet()
     return alphabets;
 }
 
-int post(char name, float probability)
+void post(char name[150], float probability)
 {
     CURL *curl;
     CURLcode res;
@@ -252,7 +252,8 @@ int post(char name, float probability)
         just as well be a https:// URL if that is what should receive the
         data. */ 
         curl_easy_setopt(curl, CURLOPT_URL, "http://homebase.russelllamb.com:8091/detections_stg");
-        snprintf(postString, sizeof(postString), "name=%d&probability=%d", name,probability);
+        if(name != NULL){
+            snprintf(postString, sizeof(postString), "name=%s&probability=%.0f", name,probability);
         /* Now specify the POST data */ 
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postString);
     
@@ -262,13 +263,39 @@ int post(char name, float probability)
         if(res != CURLE_OK)
         fprintf(stderr, "curl_easy_perform() failed: %s\n",
                 curl_easy_strerror(res));
-    
+     
         /* always cleanup */ 
         curl_easy_cleanup(curl);
-        free(postString);
+        }
     }
     curl_global_cleanup();
-    return 0;
+   /* free(postString);*/
+}
+
+void post_detections(int num, float thresh, float **probs,char **names,int classes){
+     int i,j;
+     char strname[150];
+    for(i = 0; i < num; ++i){
+        char labelstr[4096] = {0};
+        int class = -1;
+        for(j = 0; j < classes; ++j){
+            if (probs[i][j] > thresh){
+                if (class < 0) {
+                    strcat(labelstr, names[j]);
+                    class = j;
+                } else {
+                    strcat(labelstr, ", ");
+                    strcat(labelstr, names[j]);
+                }
+                
+                if(probs[i][j]*100 > 0){
+                    snprintf(strname, sizeof(strname), "%s",names[j]);
+                    printf("%s: %.0f%%\n", names[j], probs[i][j]*100);
+                    post(strname, probs[i][j]*100);
+                }
+            }
+        }
+    }
 }
 
 void draw_detections(image im, int num, float thresh, box *boxes, float **probs, float **masks, char **names, image **alphabet, int classes)
@@ -287,8 +314,10 @@ void draw_detections(image im, int num, float thresh, box *boxes, float **probs,
                     strcat(labelstr, ", ");
                     strcat(labelstr, names[j]);
                 }
+                char strname[150];
+                snprintf(strname, sizeof(strname), "%s",names[j]);
                 printf("%s: %.0f%%\n", names[j], probs[i][j]*100);
-                post(names[j], probs[i][j]*100);
+                post(strname, probs[i][j]*100);
             }
         }
         if(class >= 0){
@@ -580,7 +609,7 @@ void show_image_cv(image p, const char *name, IplImage *disp)
 	CvSize size;
 	size.width = disp->width;
 	size.height = disp->height;
-
+    /*
 	static CvVideoWriter* output_video = NULL;    // cv::VideoWriter output_video;
 	if (output_video == NULL)
 	{
@@ -590,6 +619,7 @@ void show_image_cv(image p, const char *name, IplImage *disp)
 		printf("\n cvCreateVideoWriter, DST output_video = %p  \n", output_video);
 	}
 	cvWriteFrame(output_video, disp);
+    */
 }
 }
 #endif

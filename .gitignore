@@ -4,3 +4,5 @@
 *.MOV
 
 *.weights
+
+test_dnn_out\.avi
