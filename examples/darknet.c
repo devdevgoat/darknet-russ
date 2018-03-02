@@ -384,6 +384,8 @@ void visualize(char *cfgfile, char *weightfile)
 
 int main(int argc, char **argv)
 {
+
+    
     //test_resize("data/bad.jpg");
     //test_box();
     //test_convolutional_layer();

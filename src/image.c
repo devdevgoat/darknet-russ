@@ -5,12 +5,15 @@
 #include <stdio.h>
 #include <math.h>
 
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
+#include <curl/curl.h>
 
 int windows = 0;
+
 
 float colors[6][3] = { {1,0,1}, {0,0,1},{0,1,1},{0,1,0},{1,1,0},{1,0,0} };
 
@@ -235,6 +238,39 @@ image **load_alphabet()
     return alphabets;
 }
 
+int post(char name, float probability)
+{
+    CURL *curl;
+    CURLcode res;
+    char postString[250];
+    /* In windows, this will init the winsock stuff */ 
+    curl_global_init(CURL_GLOBAL_ALL);
+    /* get a curl handle */ 
+    curl = curl_easy_init();
+    if(curl) {
+        /* First set the URL that is about to receive our POST. This URL can
+        just as well be a https:// URL if that is what should receive the
+        data. */ 
+        curl_easy_setopt(curl, CURLOPT_URL, "http://homebase.russelllamb.com:8091/detections_stg");
+        snprintf(postString, sizeof(postString), "name=%d&probability=%d", name,probability);
+        /* Now specify the POST data */ 
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postString);
+    
+        /* Perform the request, res will get the return code */ 
+        res = curl_easy_perform(curl);
+        /* Check for errors */ 
+        if(res != CURLE_OK)
+        fprintf(stderr, "curl_easy_perform() failed: %s\n",
+                curl_easy_strerror(res));
+    
+        /* always cleanup */ 
+        curl_easy_cleanup(curl);
+        free(postString);
+    }
+    curl_global_cleanup();
+    return 0;
+}
+
 void draw_detections(image im, int num, float thresh, box *boxes, float **probs, float **masks, char **names, image **alphabet, int classes)
 {
     int i,j;
@@ -252,6 +288,7 @@ void draw_detections(image im, int num, float thresh, box *boxes, float **probs,
                     strcat(labelstr, names[j]);
                 }
                 printf("%s: %.0f%%\n", names[j], probs[i][j]*100);
+                post(names[j], probs[i][j]*100);
             }
         }
         if(class >= 0){

@@ -1,0 +1,69 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf200
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Regular;\f2\fnil\fcharset0 AndaleMono;
+}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\csgray\c0\c0;}
+\margl1440\margr1440\vieww16720\viewh12140\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf2 \cb3 Install FFmpeg\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs26 \cf2 \cb3 \expnd0\expndtw0\kerning0
+sudo apt-get install libav-tools
+\fs22 \cf2 \cb3 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f2\fs24 \cf2 \cb3 ./darknet detector demo cfg/coco.data cfg/yolo.cfg yolo.weights rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov\
+	doesn\'92t work bc of moov atom error
+\f1\fs26 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf2 \cb3 \kerning1\expnd0\expndtw0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf2 	sudo su\
+	
+\f1\fs22 \CocoaLigature0 wget https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-64bit-static.tar.xz\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 --2018-03-01 19:07:57--  https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-64bit-static.tar.xz\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf2 \CocoaLigature1 	
+\f1\fs22 \CocoaLigature0 yum install xz\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 unxz ffmpeg-git-64bit-static.tar.xz \
+tar -xvf ffmpeg-git-64bit-static.tar \
+cd ffmpeg-git-20180228-64bit-static/\
+mv * ..\
+cd ..\
+rm -rf ffmpeg-git-20180228-64bit-static/\
+ rm ffmpeg-git-64bit-static.tar \
+./ffmpeg -version\
+ffmpeg -i rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov -r 15 ~/test1.mov\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf2 \CocoaLigature1 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf2 Install darknest\
+	
+\f2 \cf2 \cb3 \CocoaLigature0 sudo ln -s /usr/local/share/OpenCV/3rdparty/lib/libippicv.a /usr/local/lib
+\f0 \cf2 \cb3 \CocoaLigature1 \
+	
+\f1\fs22 \CocoaLigature0 git clone https://github.com/pjreddie/darknet.git or\
+		
+\f2\fs24 \cf2 \cb3 git clone https://github.com/rlamb2/darknet-russ.git
+\f1\fs22 \cf2 \cb3 \
+
+\f0\fs24 \CocoaLigature1 	
+\f1\fs22 \CocoaLigature0 cd darknet-russ\
+	make -j8
+\f0\fs32 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\
+\
+YOUTUBE\
+	
+\f1\fs26 pip3 install youtube-dl\
+}
